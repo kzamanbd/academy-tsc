@@ -1,5 +1,5 @@
 import { NextFunction, Response } from "express";
-import { GeneralError } from "../exceptions/request";
+import { GeneralError } from "../exceptions/AppError";
 
 // request handler
 export const requestHandler = (req: Request, res: Response, next: NextFunction) => {
