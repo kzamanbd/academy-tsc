@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
+import { IContact } from "../models/contact";
+import { IUser } from "../models/user";
 import { Route } from "../routes";
-import { getUsers } from "../services/user.service";
+import { getContacts, getUsers } from "../services/user.service";
 
 const loginHandler = (req: Request, res: Response) => {
 	console.log("login");
@@ -13,7 +15,7 @@ const registerHandler = async (req: Request, res: Response) => {
 
 const usersHandler = async (req: Request, res: Response) => {
 	try {
-		const users = await getUsers();
+		const users: IUser[] = await getUsers();
 		res.json({
 			message: "Users fetched successfully",
 			length: users.length,
@@ -24,9 +26,17 @@ const usersHandler = async (req: Request, res: Response) => {
 	}
 };
 
-const contactsHandler = (req: Request, res: Response) => {
-	console.log("getContactsHandler");
-	res.json({ message: "getContactsHandler" });
+const contactsHandler = async (req: Request, res: Response) => {
+	try {
+		const contacts: IContact[] = await getContacts();
+		res.json({
+			message: "Contacts fetched successfully",
+			length: contacts.length,
+			contacts
+		});
+	} catch (err: any) {
+		res.json({ message: err.message });
+	}
 };
 
 export const userRoutes: Route[] = [

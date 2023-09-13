@@ -2,20 +2,22 @@ import { NextFunction, Request, Response } from "express";
 import { v4 as uuidV4 } from "uuid";
 import { GeneralError } from "../exceptions/AppError";
 
+const correlationHeader: string = "X-Correlation-ID";
+
 // request handler
 export const requestHandler = (req: Request, res: Response, next: NextFunction): void => {
-	let correlationId = (req.headers as any)["x-correlation-id"];
+	let correlationId = req.headers[correlationHeader];
 	if (!correlationId) {
 		correlationId = uuidV4();
-		(req.headers as any)["x-correlation-id"] = correlationId;
+		req.headers[correlationHeader] = correlationId;
 	}
-	res.set("x-correlation-id", correlationId);
+	res.set(correlationHeader, correlationId);
 	next();
 };
 
 // global error handler
 export const errorHandler = (err: Error, req: Request, res: Response, next: NextFunction): void => {
-	const correlationId = (req.headers as any)["x-correlation-id"];
+	const correlationId = req.headers[correlationHeader];
 	let code = 500;
 	if (err instanceof GeneralError) {
 		code = err.getCode();
@@ -27,7 +29,7 @@ export const errorHandler = (err: Error, req: Request, res: Response, next: Next
 };
 
 export const notFoundHandler = (req: Request, res: Response, next: NextFunction): void => {
-	const correlationId = (req.headers as any)["x-correlation-id"];
+	const correlationId = req.headers[correlationHeader];
 	res.status(404).json({
 		correlationId,
 		message: "URL Not Found"

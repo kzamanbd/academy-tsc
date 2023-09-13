@@ -1,4 +1,4 @@
-import { Document, Schema, model } from "mongoose";
+import { Model, Schema, model } from "mongoose";
 
 export interface IUser extends Document {
 	id: string;
@@ -31,6 +31,6 @@ userSchema.set("toJSON", {
 	transform: (doc, { __v, password, ...rest }, options) => rest
 });
 
-const User = model<IUser>("User", userSchema);
+const User: Model<IUser> = model<IUser>("User", userSchema);
 
 export default User;
