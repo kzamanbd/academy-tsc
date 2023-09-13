@@ -2,42 +2,52 @@ import { Request, Response } from "express";
 import { Route } from "../routes";
 import { getUsers } from "../services/user.service";
 
-const login = (req: Request, res: Response) => {
+const loginHandler = (req: Request, res: Response) => {
 	console.log("login");
 	res.json({ message: req.body });
 };
 
-const register = async (req: Request, res: Response) => {
+const registerHandler = async (req: Request, res: Response) => {
 	console.log("register");
 };
 
-const users = async (req: Request, res: Response) => {
+const usersHandler = async (req: Request, res: Response) => {
 	try {
 		const users = await getUsers();
 		res.json({
 			message: "Users fetched successfully",
+			length: users.length,
 			users
 		});
 	} catch (err: any) {
-		console.log(err);
 		res.json({ message: err.message });
 	}
+};
+
+const contactsHandler = (req: Request, res: Response) => {
+	console.log("getContactsHandler");
+	res.json({ message: "getContactsHandler" });
 };
 
 export const userRoutes: Route[] = [
 	{
 		path: "/auth/login",
 		method: "post",
-		handler: login
+		handler: loginHandler
 	},
 	{
 		path: "/auth/register",
 		method: "post",
-		handler: register
+		handler: registerHandler
 	},
 	{
 		path: "/users",
 		method: "get",
-		handler: users
+		handler: usersHandler
+	},
+	{
+		path: "/contacts",
+		method: "get",
+		handler: contactsHandler
 	}
 ];

@@ -1,10 +1,29 @@
-import mongoose from "mongoose";
+import { Document, Schema, model } from "mongoose";
 
-const userSchema = new mongoose.Schema({
-	id: String,
-	name: String,
-	email: String,
-	password: String
+export interface IUser extends Document {
+	id: string;
+	name: string;
+	email: string;
+	password: string;
+}
+
+const userSchema = new Schema<IUser>({
+	id: {
+		type: String,
+		required: true
+	},
+	name: {
+		type: String,
+		required: true
+	},
+	email: {
+		type: String,
+		required: true
+	},
+	password: {
+		type: String,
+		required: true
+	}
 });
 
 // hide password field
@@ -12,13 +31,6 @@ userSchema.set("toJSON", {
 	transform: (doc, { __v, password, ...rest }, options) => rest
 });
 
-export interface UserDocument extends mongoose.Document {
-	id: string;
-	name: string;
-	email: string;
-	password: string;
-}
-
-const User = mongoose.model<UserDocument>("User", userSchema);
+const User = model<IUser>("User", userSchema);
 
 export default User;
