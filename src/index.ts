@@ -1,6 +1,7 @@
 import cors from "cors";
 import dotenv from "dotenv";
 import express, { Express } from "express";
+import mongoose from "mongoose";
 import { errorHandler, notFoundHandler, requestHandler } from "./middleware/errorHandler";
 import router from "./routes";
 
@@ -21,6 +22,14 @@ app.use(notFoundHandler);
 // error handler
 app.use(errorHandler);
 
-app.listen(port, () => {
+app.listen(port, async () => {
 	console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
+	// connect mongoDB
+	const MONGO_URI: string = process.env.MONGO_URI || "http://localhost:27017";
+	try {
+		await mongoose.connect(MONGO_URI);
+		console.log("MongoDB connected ✅");
+	} catch (err) {
+		console.log(err);
+	}
 });
